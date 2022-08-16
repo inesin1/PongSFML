@@ -33,12 +33,8 @@ namespace PongSFML
 
                 _window.DispatchEvents();           // Обрабатываем события окна
 
-                _window.Clear();                    // Очищаем окно
-
                 Update(time.AsSeconds()); 
                 Draw();
-
-                _window.Display();                  // Отображаем окно
             }
         }
 
@@ -48,8 +44,7 @@ namespace PongSFML
         private void Init() {
             _window.Closed += (object? sender, EventArgs e) => { _window.Close(); };
 
-            _circleShape.FillColor = Color.Red;
-            _bitmapSprite = new Sprite(_bitmapTexture);
+
         }
 
         /// <summary>
@@ -64,6 +59,13 @@ namespace PongSFML
         /// Отрисовывает игровые объекты
         /// </summary>
         private void Draw() {
+            _window.Clear();                    // Очищаем окно
+
+            _window.Draw(_spriteBatch["batL"]);
+            _window.Draw(_spriteBatch["batR"]);
+            _window.Draw(_spriteBatch["ball"]);
+
+            _window.Display();                  // Отображаем окно
         }
     }
 }

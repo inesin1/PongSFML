@@ -11,5 +11,6 @@ namespace PongSFML
     /// </summary>
     internal class Ball
     {
+
     }
 }
