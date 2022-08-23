@@ -19,9 +19,9 @@ namespace PongSFML
         private Dictionary<string, Drawable> _spriteBatch = new Dictionary<string, Drawable>();
 
         // Игровые объекты
-        private Bat _batL = new Bat("left");
-        private Bat _batR = new Bat("right");
-        private Ball _ball = new Ball();
+        public Bat BatL = new Bat("left");
+        public Bat BatR = new Bat("right");
+        public Ball Ball;
 
         public Game() {
             Init();
@@ -46,23 +46,32 @@ namespace PongSFML
         }
 
         /// <summary>
+        /// Перезапускает игру
+        /// </summary>
+        public void Restart() {
+            Ball.Position = Variables.DEFAULT_BALL_POSITION;
+        }
+
+        /// <summary>
         /// Загрузка контента в игру
         /// </summary>
         private void LoadContent() {
-            _spriteBatch.Add("batL", _batL.Sprite);
-            _spriteBatch.Add("batR", _batR.Sprite);
-            _spriteBatch.Add("ball", _ball.Sprite);
+            _spriteBatch.Add("batL", BatL.Sprite);
+            _spriteBatch.Add("batR", BatR.Sprite);
+            _spriteBatch.Add("ball", Ball.Sprite);
         }
 
         /// <summary>
         /// Инициализирует игру и игровые объекты
         /// </summary>
         private void Init() {
+            Ball = new Ball(this);
+
             _window.Closed += (object? sender, EventArgs e) => { _window.Close(); };
 
-            _batL.Init();
-            _batR.Init();
-            _ball.Init();
+            BatL.Init();
+            BatR.Init();
+            Ball.Init();
         }
 
         /// <summary>
@@ -70,9 +79,9 @@ namespace PongSFML
         /// </summary>
         /// <param name="deltaTime">Разница во времени между кадрами</param>
         private void Update(float deltaTime) { 
-            _batL.Update(deltaTime);
-            _batR.Update(deltaTime);
-            _ball.Update(deltaTime);
+            BatL.Update(deltaTime);
+            BatR.Update(deltaTime);
+            Ball.Update(deltaTime);
         }
 
         /// <summary>
