@@ -23,6 +23,13 @@ namespace PongSFML
         public Bat BatR = new Bat("right");
         public Ball Ball;
 
+        // Очки | [0] - left, [1] - right 
+        public int[] Scores = { 0, 0 };
+
+        // Шрифт
+        private Font _font = new Font(@"Assets\AtariClassicSmooth.ttf");
+        private Text _scorePanel;
+
         public Game() {
             Init();
         }
@@ -82,6 +89,9 @@ namespace PongSFML
             BatL.Update(deltaTime);
             BatR.Update(deltaTime);
             Ball.Update(deltaTime);
+
+            _scorePanel = new Text($"{Scores[0]}\t{Scores[1]}", _font);
+            _scorePanel.Position = new Vector2f(Variables.SCREEN_HALF_WIDTH - _scorePanel.GetLocalBounds().Width / 2, 16);
         }
 
         /// <summary>
@@ -94,6 +104,7 @@ namespace PongSFML
             _window.Draw(_spriteBatch["batL"]);
             _window.Draw(_spriteBatch["batR"]);
             _window.Draw(_spriteBatch["ball"]);
+            _window.Draw(_scorePanel);
 
             _window.Display();                  // Отображаем окно
         }

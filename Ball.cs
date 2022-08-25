@@ -66,11 +66,33 @@ namespace PongSFML
                 _direction = 360 - _direction;
 
             // С горизонтальными границами поля
-            if (
-                Position.X <= 0 + Size.X / 2 ||
-                Position.X >= Variables.SCREEN_WIDTH - Size.X / 2
-                )
+            if (Position.X >= Variables.SCREEN_WIDTH - Size.X / 2)
+            {
+                Context.Scores[0]++;
                 Context.Restart();
+            }
+
+            if (Position.X <= 0 + Size.X / 2) {
+                Context.Scores[1]++;
+                Context.Restart();
+            }
+
+            // С ракетками
+            if (IsCollide(Context.BatL) || IsCollide(Context.BatR))
+                _direction = 180 - _direction;
+        }
+
+        /// <summary>
+        /// Проверка столкновения с ракеткой
+        /// </summary>
+        /// <param name="bat">Ракетка</param>
+        /// <returns>Есть ли столкновение</returns>
+        private bool IsCollide(Bat bat) {
+            return
+                Position.X + Size.X >= bat.Position.X &&
+                Position.X <= bat.Position.X + bat.Sprite.GetLocalBounds().Width &&
+                Position.Y + Size.Y >= bat.Position.Y &&
+                Position.Y <= bat.Position.Y + bat.Sprite.GetLocalBounds().Height;
         }
 
         /// <summary>
