@@ -21,6 +21,10 @@ namespace PongSFML
         private float _speed = 400.0f;      // Скорость движения
         private float _direction = 45.0f;   // Направление
 
+        private long _startSleep = 0;       // Время старта сна
+        private int _sleepTime = 0;         // Время сна
+        private bool _isSleep = false;      // Спит ли
+
         public Ball(Game context) { 
             Context = context;
         }
@@ -42,7 +46,30 @@ namespace PongSFML
             Move(deltaTime);
             CheckCollision();
 
+            if (TimeSpan.FromTicks(DateTime.Now.Ticks - _startSleep).TotalMilliseconds >= _sleepTime)
+                _isSleep = false;
+
+            if (_isSleep)
+            {
+                _speed = 0;
+            }
+            else
+            {
+                _speed = 400.0f;
+            }
+
             Sprite.Position = Position;
+        }
+
+        /// <summary>
+        /// Останавливает объект на установленное время
+        /// </summary>
+        /// <param name="sleepTime">Время сна</param>
+        public void Sleep(int sleepTime)
+        {
+            _startSleep = DateTime.Now.Ticks;
+            _sleepTime = sleepTime;
+            _isSleep = true;
         }
 
         /// <summary>
@@ -70,11 +97,13 @@ namespace PongSFML
             {
                 Context.Scores[0]++;
                 Context.Restart();
+                Sleep(1000);
             }
 
             if (Position.X <= 0 + Size.X / 2) {
                 Context.Scores[1]++;
                 Context.Restart();
+                Sleep(1000);
             }
 
             // С ракетками

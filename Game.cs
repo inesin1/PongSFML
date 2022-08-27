@@ -29,6 +29,10 @@ namespace PongSFML
         // Шрифт
         private Font _font = new Font(@"Assets\AtariClassicSmooth.ttf");
         private Text _scorePanel;
+        private Text _resultText = new Text();
+
+        // Идет ли игра
+        private bool _isPlay = true;
 
         public Game() {
             Init();
@@ -85,13 +89,26 @@ namespace PongSFML
         /// Обновляет игровые объекты
         /// </summary>
         /// <param name="deltaTime">Разница во времени между кадрами</param>
-        private void Update(float deltaTime) { 
-            BatL.Update(deltaTime);
-            BatR.Update(deltaTime);
-            Ball.Update(deltaTime);
+        private void Update(float deltaTime) {
+            if (_isPlay)
+            {
+                BatL.Update(deltaTime);
+                BatR.Update(deltaTime);
+                Ball.Update(deltaTime);
+
+                CheckEndGame();
+            }
+            else {
+                if (Keyboard.IsKeyPressed(Keyboard.Key.R)) {
+                    Scores = new int[2] { 0, 0 };
+                    _isPlay = true;
+                    Restart();
+                }
+            }
 
             _scorePanel = new Text($"{Scores[0]}\t{Scores[1]}", _font);
             _scorePanel.Position = new Vector2f(Variables.SCREEN_HALF_WIDTH - _scorePanel.GetLocalBounds().Width / 2, 16);
+            _resultText.Position = new Vector2f(Variables.SCREEN_HALF_WIDTH - _resultText.GetLocalBounds().Width / 2, Variables.SCREEN_HALF_HEIGHT - 100);
         }
 
         /// <summary>
@@ -105,8 +122,27 @@ namespace PongSFML
             _window.Draw(_spriteBatch["batR"]);
             _window.Draw(_spriteBatch["ball"]);
             _window.Draw(_scorePanel);
+            if (!_isPlay) 
+                _window.Draw(_resultText);
 
             _window.Display();                  // Отображаем окно
+        }
+
+        /// <summary>
+        /// Проверяет закончена ли игра
+        /// </summary>
+        private void CheckEndGame() {
+            if (Scores[0] == 2 || Scores[1] == 2) {
+                _isPlay = false;
+
+                if (Scores[0] > Scores[1])
+                {
+                    _resultText = new Text("Player 1 win!\nPress R to restart", _font);
+                }
+                else {
+                    _resultText = new Text("Player 2 win!\nPress R to restart", _font);
+                }
+            }
         }
     }
 }
